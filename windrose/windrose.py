@@ -434,6 +434,7 @@ class WindroseAxes(PolarAxes):
             if not isinstance(edgecolor, str):
                 raise ValueError('edgecolor must be a string color')
         opening = kwargs.pop('opening', None)
+        rmax = kwargs.pop('rmax',None)
         if opening is None:
             opening = 0.8
         dtheta = 2 * np.pi / nsector
@@ -453,7 +454,12 @@ class WindroseAxes(PolarAxes):
                 self.add_patch(patch)
                 if j == 0:
                     self.patches_list.append(patch)
-        self._update()
+        #self._update()
+        if rmax:
+            self.set_rmax(rmax=rmax)
+        else:
+            self.set_rmax(rmax=np.max(np.sum(self._info['table'][1:,:], axis=0)))
+        self.set_radii_angle(angle=self.radii_angle)
 
     def box(self, direction, var, **kwargs):
         """
