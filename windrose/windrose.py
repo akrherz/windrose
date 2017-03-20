@@ -68,7 +68,7 @@ class WindroseAxes(PolarAxes):
             if fig is None:
                 fig = plt.figure(figsize=FIGSIZE_DEFAULT, dpi=DPI_DEFAULT, facecolor='w', edgecolor='w')
             rect = [0.1, 0.1, 0.8, 0.8]
-            ax = WindroseAxes(fig, rect, axisbg='w', rmax=rmax, *args, **kwargs)
+            ax = WindroseAxes(fig, rect, facecolor='w', rmax=rmax, *args, **kwargs)
             fig.add_axes(ax)
             return ax
         else:
@@ -123,7 +123,8 @@ class WindroseAxes(PolarAxes):
 
     def _update(self):
         if self.rmax is None:
-            self.set_rmax(rmax=np.max(np.sum(self._info['table'], axis=0)))
+            # DEH edit to not use calm in the limits
+            self.set_rmax(rmax=np.max(np.sum(self._info['table'][1:,:], axis=0)))
         else:
             self.set_rmax(rmax=self.rmax)
         self.set_radii_angle(angle=self.radii_angle)
@@ -434,7 +435,6 @@ class WindroseAxes(PolarAxes):
             if not isinstance(edgecolor, str):
                 raise ValueError('edgecolor must be a string color')
         opening = kwargs.pop('opening', None)
-        rmax = kwargs.pop('rmax',None)
         if opening is None:
             opening = 0.8
         dtheta = 2 * np.pi / nsector
@@ -442,8 +442,10 @@ class WindroseAxes(PolarAxes):
 
         for j in range(nsector):
             offset = 0
-            for i in range(nbins):
-                if i > 0:
+            # DEH edit to keep first bin from plotting
+            for i in range(1, nbins):
+                # DEH edit again
+                if i > 1:
                     offset += self._info['table'][i - 1, j]
                 val = self._info['table'][i, j]
                 zorder = ZBASE + nbins - i
@@ -454,12 +456,7 @@ class WindroseAxes(PolarAxes):
                 self.add_patch(patch)
                 if j == 0:
                     self.patches_list.append(patch)
-        #self._update()
-        if rmax:
-            self.set_rmax(rmax=rmax)
-        else:
-            self.set_rmax(rmax=np.max(np.sum(self._info['table'][1:,:], axis=0)))
-        self.set_radii_angle(angle=self.radii_angle)
+        self._update()
 
     def box(self, direction, var, **kwargs):
         """
