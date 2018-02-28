@@ -20,7 +20,7 @@ setup(
     # version='0.0.2',
     version=__version__,
 
-    setup_requires=['setuptools-markdown'],
+    setup_requires=[],
     description='Python Matplotlib, Numpy library to manage wind data, draw windrose (also known as a polar rose plot)',
     long_description_markdown_filename='README.md',
 
