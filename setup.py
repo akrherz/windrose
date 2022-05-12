@@ -22,7 +22,6 @@ setup(
 
     setup_requires=[],
     description='Python Matplotlib, Numpy library to manage wind data, draw windrose (also known as a polar rose plot)',
-    long_description_markdown_filename='README.md',
 
     # The project's main homepage.
     url=__url__,
